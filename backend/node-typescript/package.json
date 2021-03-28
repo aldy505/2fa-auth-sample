@@ -1,0 +1,24 @@
+{
+  "name": "node-typescript",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "tsc && node dist/index.js --experimental-modules"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^6.4.1",
+    "typescript": "^4.2.3"
+  },
+  "dependencies": {
+    "@tinyhttp/app": "^1.2.17",
+    "@tinyhttp/cors": "^1.2.0",
+    "argon2": "^0.27.1",
+    "generate-passphrase": "^1.0.0",
+    "knex": "^0.95.3",
+    "milliparsec": "^2.0.0",
+    "mysql2": "^2.2.5",
+    "nodemailer": "^6.5.0"
+  }
+}
