@@ -5,7 +5,6 @@ import { generate } from "generate-passphrase"
 import { json, urlencoded } from "milliparsec"
 import { createTransport } from "nodemailer"
 import { db, initializeDatabase } from "./database"
-import { Knex } from "knex"
 
 const app = new App()
 
