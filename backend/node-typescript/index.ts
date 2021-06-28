@@ -1,31 +1,26 @@
 import { App, NextFunction, Request, Response } from "@tinyhttp/app"
+import { cookieParser } from "@tinyhttp/cookie-parser"
 import { cors } from "@tinyhttp/cors"
 import { argon2id, hash, verify } from "argon2"
 import { generate } from "generate-passphrase"
-import { json, urlencoded } from "milliparsec"
+import { json } from "milliparsec"
 import { createTransport } from "nodemailer"
+import { csrf, CSRFRequest } from "malibu"
 import { db, initializeDatabase } from "./database"
 
-const app = new App()
+const app = new App<any, Request & CSRFRequest>()
 
 app.use(cors())
 app.use(json())
-app.use(urlencoded())
+app.use(cookieParser('ARHCopjV5eC48Cqcug5JFxSS7gtEz5Jr'))
 
-function csrfProtection(req: Request, res: Response, next: NextFunction) {
-  const csrf = req.body['_csrf'] || req.headers['csrf-token'] || req.headers['xsrf-token']
-  if (csrf > Date.now()) {
-    next()
-  } else {
-    res.status(400).json({ message: 'CSRF Token Expired' })
-  }
-}
+const csrfProtection = csrf({ cookie: { signed: true } })
 
 /**
  * This is the route to get your CSRF token.
  */
- app.get('/', (_req: Request, res: Response) => {
-  res.status(200).json({ csrf: Date.now() + (30 * 60 * 1000) })
+ app.get('/', csrfProtection, (req: Request & CSRFRequest, res: Response) => {
+  res.status(200).json({ csrf: req.csrfToken() })
 })
 
 /**
