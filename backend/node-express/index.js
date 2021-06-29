@@ -4,6 +4,8 @@ const { generate } = require('generate-passphrase')
 const { hash, argon2id, verify } = require('argon2')
 const { db, initializeDatabase } = require('./database')
 const { createTransport } = require('nodemailer')
+const cookieParser = require('cookie-parser')
+const csrf = require('csurf')
 
 const app = express()
 
@@ -17,7 +19,7 @@ const app = express()
  */
 app.use(cors())
 app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser('ARHCopjV5eC48Cqcug5JFxSS7gtEz5Jr'))
 
 /**
  * Cross-Site Request Forgery (CSRF) is an attack that forces an end user to execute
@@ -28,17 +30,8 @@ app.use(express.urlencoded({ extended: true }))
  * 
  * Read more about it here: https://owasp.org/www-community/attacks/csrf
  * The CSRF middleware you should be using: https://github.com/expressjs/csurf
- * 
- * I'm not using that because of this project simplicity.
  */
-function csrfProtection(req, res, next) {
-  const csrf = req.body['_csrf'] || req.header('csrf-token') || req.header('xsrf-token')
-  if (csrf > Date.now()) {
-    next()
-  } else {
-    res.status(400).json({ message: 'CSRF Token Expired' })
-  }
-}
+const csrfProtection = csrf({ cookie: { signed: true }})
 
 /**
  * This is the route to get your CSRF token.
