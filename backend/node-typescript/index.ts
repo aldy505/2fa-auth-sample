@@ -90,7 +90,7 @@ app.post('/email', csrfProtection, async (req: Request, res: Response) => {
 })
 
 /**
- * Submit the passphrase they received into the 
+ * Submit the passphrase they received into the
  */
 app.post('/passphrase', csrfProtection, async (req: Request, res: Response) => {
   try {
